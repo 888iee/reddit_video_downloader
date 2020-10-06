@@ -25,6 +25,11 @@ app.post( "/", ( req, res, next ) => {
 	let url = req.body.redditUrl;
 	console.log( `requested video download url: ${url}` );
 
+	/* 
+	*	Can't scrape src from video tag probably because it's added
+	* 	dynamically 
+	*	fix -> use nightmarejs instead of cheeriojs
+	* */
 	request( url, ( err, reqRes, html ) => {
 		if( !err && reqRes.statusCode == 200 ) {
 			const $ = cheerio.load( html, { decodeEntities: false, withDomLvl1: false });
