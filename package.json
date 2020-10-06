@@ -1,0 +1,19 @@
+{
+  "name": "reddit_video_downloader",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/888iee/reddit_video_downloader.git"
+  },
+  "author": "888iee",
+  "license": "Unlicense",
+  "bugs": {
+    "url": "https://github.com/888iee/reddit_video_downloader/issues"
+  },
+  "homepage": "https://github.com/888iee/reddit_video_downloader#readme"
+}
