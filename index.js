@@ -6,6 +6,8 @@ const bodyParse = require( "body-parser" );
 const Nightmare = require( "nightmare" );
 const nightmare = Nightmare({ show: true });
 const fsaver	= require( "file-saver" );
+const XMLHttpRequest = require( "xmlhttprequest" ).XMLHttpRequest;
+const FileReader = require( "FileReader" );
 // port
 const port = 3000;
 
@@ -34,7 +36,29 @@ app.post( "/", ( req, res, next ) => {
 		.catch(error => console.error( 'Search failed:', error ))
 		.then(( res ) => {
 			console.log( `Video url: ${ res }` )
-			// fsaver.saveAs( res, "file.mp4" )
+		
+			// let blob = new Blob([ res ], { type: "video/.mp4" });
+			// let blobUrl = Url.createObjectURL( res );
+
+			let xhr = new XMLHttpRequest();
+			xhr.responseType = "blob";
+
+			xhr.onload = () => {
+				let recoveredBlob = xhr.response;
+
+				let reader = new FileReader();
+
+				reader.onload = () => {
+					let blobAsDataUrl = reader.result;
+					window.location = blobAsDataUrl;
+				};
+
+				reader.readAsDataURL( recoveredBlob );
+
+			}
+			console.log( res );
+			xhr.open( "GET", res.replace( "blob:", "" ) );
+			xhr.send();
 		})
 });
 
