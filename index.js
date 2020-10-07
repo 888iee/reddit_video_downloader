@@ -3,7 +3,9 @@ const cheerio 	= require( "cheerio" );
 const fs		= require( "fs" );
 const express 	= require( "express" );
 const bodyParse = require( "body-parser" );
-
+const Nightmare = require( "nightmare" );
+const nightmare = Nightmare({ show: true });
+const fsaver	= require( "file-saver" );
 // port
 const port = 3000;
 
@@ -25,19 +27,15 @@ app.post( "/", ( req, res, next ) => {
 	let url = req.body.redditUrl;
 	console.log( `requested video download url: ${url}` );
 
-	/* 
-	*	Can't scrape src from video tag probably because it's added
-	* 	dynamically 
-	*	fix -> use nightmarejs instead of cheeriojs
-	* */
-	request( url, ( err, reqRes, html ) => {
-		if( !err && reqRes.statusCode == 200 ) {
-			const $ = cheerio.load( html, { decodeEntities: false, withDomLvl1: false });
-
-			console.log( $( "video" ).attr( "src" ));
-		}
-	});
-	res.send("ok")
+	nightmare
+		.goto( url )
+		.wait( 5000 )
+		.evaluate(() => document.body.querySelector( "video" ).src )
+		.catch(error => console.error( 'Search failed:', error ))
+		.then(( res ) => {
+			console.log( `Video url: ${ res }` )
+			// fsaver.saveAs( res, "file.mp4" )
+		})
 });
 
 
