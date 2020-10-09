@@ -5,12 +5,15 @@ const express 	= require( "express" );
 const bodyParse = require( "body-parser" );
 const Nightmare = require( "nightmare" );
 const nightmare = Nightmare({ show: true });
-const fsaver	= require( "file-saver" );
 const XMLHttpRequest = require( "xmlhttprequest" ).XMLHttpRequest;
 const FileReader = require( "FileReader" );
+const https 	= require( "https" );
 // port
 const port = 3000;
 
+let fileReader = new FileReader();
+
+fileReader.setNodeChunkedEncoding( true );
 const app = express();
 
 // middlewares
@@ -39,26 +42,39 @@ app.post( "/", ( req, res, next ) => {
 		
 			// let blob = new Blob([ res ], { type: "video/.mp4" });
 			// let blobUrl = Url.createObjectURL( res );
+			https.get( res.replace( "blob:", "" ), ( result ) => {
+				const fielStream = fs.createWriteStream( "file.mp4" );
+				
+				result.pipe( fielStream );
+				
+				fielStream.on( "finish", () => {
+					fielStream.close();
+					console.log( "done" );
+				});
+			});
+			// let xhr = new XMLHttpRequest();
+			// xhr.responseType = "blob";
 
-			let xhr = new XMLHttpRequest();
-			xhr.responseType = "blob";
+			// xhr.onload = () => {
+			// 	let recoveredBlob = xhr.response;
 
-			xhr.onload = () => {
-				let recoveredBlob = xhr.response;
+			// 	fileReader.readAsDataURL( res );
 
-				let reader = new FileReader();
+			// 	fileReader.onloadend(() => {
+			// 		console.log( "success" )
+			// 	})
+			// 	// let reader = new FileReader();
+			// 	// reader.onload = () => {
+			// 	// 	let blobAsDataUrl = reader.result;
+			// 	// 	window.location = blobAsDataUrl;
+			// 	// };
 
-				reader.onload = () => {
-					let blobAsDataUrl = reader.result;
-					window.location = blobAsDataUrl;
-				};
+			// 	// reader.readAsBinaryString( recoveredBlob );
 
-				reader.readAsDataURL( recoveredBlob );
-
-			}
-			console.log( res );
-			xhr.open( "GET", res.replace( "blob:", "" ) );
-			xhr.send();
+			// }
+			// console.log( res );
+			// xhr.open( "GET", res.replace( "blob:", "" ) );
+			// xhr.send();
 		})
 });
 
