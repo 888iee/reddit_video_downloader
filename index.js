@@ -32,50 +32,77 @@ app.post( "/", ( req, res, next ) => {
 	let url = req.body.redditUrl;
 	console.log( `requested video download url: ${url}` );
 
-	nightmare
-		.goto( url )
-		.wait( 5000 )
-		.evaluate(() => document.body.querySelector( "video" ).src )
-		.catch(error => console.error( 'Search failed:', error ))
-		.then(( res ) => {
-			console.log( `Video url: ${ res }` )
+	// list all get responses
+	let request = https.request( url, ( r ) => {
+		let str = "";
+
+		r.on( "data", ( chunk ) => {
+			str += chunk;
+		});
+
+		r.on( "end", () => {
+			console.log( str );
+		});
+	});
+	
+	request.on( "error", ( err ) => {
+		console.log( err );
+	});
+
+	request.end();
+
+	// nightmare
+	// 	.goto( url )
+	// 	.wait( 5000 )
+	// 	.evaluate(() => document.body.querySelector( "video" ).src )
+	// 	.catch(error => console.error( 'Search failed:', error ))
+	// 	.then(( res ) => {
+	// 		console.log( `Video url: ${ res }` )
 		
-			// let blob = new Blob([ res ], { type: "video/.mp4" });
-			// let blobUrl = Url.createObjectURL( res );
-			https.get( res.replace( "blob:", "" ), ( result ) => {
-				const fielStream = fs.createWriteStream( "file.mp4" );
+	// 		// let blob = new Blob([ res ], { type: "video/.mp4" });
+	// 		// let blobUrl = Url.createObjectURL( res );
+			
+
+
+	// 		// https pipe
+
+	// 		// https.get( res.replace( "blob:", "" ), ( result ) => {
+	// 		// 	const fielStream = fs.createWriteStream( "file.mp4" );
 				
-				result.pipe( fielStream );
+	// 		// 	result.pipe( fielStream );
 				
-				fielStream.on( "finish", () => {
-					fielStream.close();
-					console.log( "done" );
-				});
-			});
-			// let xhr = new XMLHttpRequest();
-			// xhr.responseType = "blob";
+	// 		// 	fielStream.on( "finish", () => {
+	// 		// 		fielStream.close();
+	// 		// 		console.log( "done" );
+	// 		// 	});
+	// 		// });
 
-			// xhr.onload = () => {
-			// 	let recoveredBlob = xhr.response;
+	// 		// xmlhttpreq
 
-			// 	fileReader.readAsDataURL( res );
+	// 		// let xhr = new XMLHttpRequest();
+	// 		// xhr.responseType = "blob";
 
-			// 	fileReader.onloadend(() => {
-			// 		console.log( "success" )
-			// 	})
-			// 	// let reader = new FileReader();
-			// 	// reader.onload = () => {
-			// 	// 	let blobAsDataUrl = reader.result;
-			// 	// 	window.location = blobAsDataUrl;
-			// 	// };
+	// 		// xhr.onload = () => {
+	// 		// 	let recoveredBlob = xhr.response;
 
-			// 	// reader.readAsBinaryString( recoveredBlob );
+	// 		// 	fileReader.readAsDataURL( res );
 
-			// }
-			// console.log( res );
-			// xhr.open( "GET", res.replace( "blob:", "" ) );
-			// xhr.send();
-		})
+	// 		// 	fileReader.onloadend(() => {
+	// 		// 		console.log( "success" )
+	// 		// 	})
+	// 		// 	// let reader = new FileReader();
+	// 		// 	// reader.onload = () => {
+	// 		// 	// 	let blobAsDataUrl = reader.result;
+	// 		// 	// 	window.location = blobAsDataUrl;
+	// 		// 	// };
+
+	// 		// 	// reader.readAsBinaryString( recoveredBlob );
+
+	// 		// }
+	// 		// console.log( res );
+	// 		// xhr.open( "GET", res.replace( "blob:", "" ) );
+	// 		// xhr.send();
+	// 	})
 });
 
 
