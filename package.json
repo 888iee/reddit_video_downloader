@@ -24,6 +24,7 @@
     "filereader": "^0.10.3",
     "http": "0.0.1-security",
     "nightmare": "^3.0.2",
+    "puppeteer": "^5.3.1",
     "request": "^2.88.2",
     "xmlhttprequest": "^1.8.0"
   }

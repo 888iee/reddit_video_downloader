@@ -4,16 +4,16 @@ const fs		= require( "fs" );
 const express 	= require( "express" );
 const bodyParse = require( "body-parser" );
 const Nightmare = require( "nightmare" );
-const nightmare = Nightmare({ show: true });
-const XMLHttpRequest = require( "xmlhttprequest" ).XMLHttpRequest;
-const FileReader = require( "FileReader" );
+// const nightmare = Nightmare({ show: true });
+// const XMLHttpRequest = require( "xmlhttprequest" ).XMLHttpRequest;
+// const FileReader = require( "FileReader" );
 const https 	= require( "https" );
 // port
 const port = 3000;
 
-let fileReader = new FileReader();
+// let fileReader = new FileReader();
 
-fileReader.setNodeChunkedEncoding( true );
+// fileReader.setNodeChunkedEncoding( true );
 const app = express();
 
 // middlewares
@@ -32,24 +32,39 @@ app.post( "/", ( req, res, next ) => {
 	let url = req.body.redditUrl;
 	console.log( `requested video download url: ${url}` );
 
-	// list all get responses
-	let request = https.request( url, ( r ) => {
-		let str = "";
-
-		r.on( "data", ( chunk ) => {
-			str += chunk;
-		});
-
-		r.on( "end", () => {
-			console.log( str );
-		});
-	});
+	// var requ = https.request( url , function(res) {
+	// 	console.log("statusCode: ", res.statusCode);
+	// 	console.log("headers: ", res.headers);
 	
-	request.on( "error", ( err ) => {
-		console.log( err );
-	});
+	// 	res.on('data', function(d) {
+	// 		console.log( d );
+	// 	});
+	// });
 
-	request.end();
+	// list all get responses
+	// let request = https.request( url, ( r ) => {
+		// let str = "";
+
+		// r.on( "data", ( chunk ) => {
+		// 	str += chunk;
+		// });
+
+		// r.on( "end", () => {
+		// 	fs.writeFile( "log", str, "utf8", ( err ) => {
+		// 		if( err ) return console.log( err );
+
+		// 		console.log( "success" );
+
+		// 	})
+		// 	// console.log( str );
+		// });
+	// });
+	
+	// request.on( "error", ( err ) => {
+	// 	console.log( err );
+	// });
+
+	// request.end();
 
 	// nightmare
 	// 	.goto( url )
