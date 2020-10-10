@@ -1,46 +1,22 @@
-const request 	= require( "request" );
-const cheerio 	= require( "cheerio" );
 const fs		= require( "fs" );
 const express 	= require( "express" );
 const bodyParse = require( "body-parser" );
+const puppet	= require( "puppeteer" );
 
 // port
 const port = 3000;
 
-const app = express();
+// blob:https://www.reddit.com/5765e95e-83f6-47f4-88bc-a4eba8cd72b5
+// https://www.reddit.com/r/toptalent/comments/j761lc/this_dude_opens_milk_better_than_me/
+// let url = "https://www.reddit.com/r/toptalent/comments/j761lc/this_dude_opens_milk_better_than_me/";
 
-// middlewares
-app.use( express.static( 'public' ));
-app.use( bodyParse.json() );
-app.use( bodyParse.urlencoded({
-	extended: true
-}) )
+(async () => {
+	const browser 	= await puppet.launch({ devtools: true });
+	
+	const page 		= await browser.newPage();
+	console.info( page );
 
-// routes
-app.get( "/", ( req, res ) => {
-	res.sendFile("index.html");
-});
-
-app.post( "/", ( req, res, next ) => {
-	let url = req.body.redditUrl;
-	console.log( `requested video download url: ${url}` );
-
-	/* 
-	*	Can't scrape src from video tag probably because it's added
-	* 	dynamically 
-	*	fix -> use nightmarejs instead of cheeriojs
-	* */
-	request( url, ( err, reqRes, html ) => {
-		if( !err && reqRes.statusCode == 200 ) {
-			const $ = cheerio.load( html, { decodeEntities: false, withDomLvl1: false });
-
-			console.log( $( "video" ).attr( "src" ));
-		}
-	});
-	res.send("ok")
-});
-
-
-app.listen( port, () => {
-	console.log( `Server running at Port ${port}` );
-});
+	// Holds the browser until we terminate the process explicitly
+	await browser.waitForTarget(() => false );
+	await browser.close();
+})();
