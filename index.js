@@ -1,22 +1,18 @@
-const fs		= require( "fs" );
-const express 	= require( "express" );
-const bodyParse = require( "body-parser" );
-const puppet	= require( "puppeteer" );
+// const reddit = require( "./reddit" );
+const fs = require( "fs" );
+const execFile = require( "child_process" ).execFile;
 
 // port
 const port = 3000;
 
-// blob:https://www.reddit.com/5765e95e-83f6-47f4-88bc-a4eba8cd72b5
-// https://www.reddit.com/r/toptalent/comments/j761lc/this_dude_opens_milk_better_than_me/
-// let url = "https://www.reddit.com/r/toptalent/comments/j761lc/this_dude_opens_milk_better_than_me/";
 
-(async () => {
-	const browser 	= await puppet.launch({ devtools: true });
-	
-	const page 		= await browser.newPage();
-	console.info( page );
+let url = "https://reddit.com/r/WatchPeopleDieInside/comments/j8n5c1/putin_laughs_at_his_minister_for_suggesting_to/";
+// reddit.initialize( url );
 
-	// Holds the browser until we terminate the process explicitly
-	await browser.waitForTarget(() => false );
-	await browser.close();
-})();
+const child = execFile("youtube-dl", 
+	[ url, "--id", "--restrict-filenames", "--no-call-home", "--no-continue", "--no-part", "--no-cache-dir", ], 
+	( err, stdout, stderr ) => {
+		if( err ) throw err;
+
+		console.log( stdout );
+	});
