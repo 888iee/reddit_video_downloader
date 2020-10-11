@@ -2,8 +2,8 @@
 
 ### Dependencies
 
-Execute youtube-dl 
-`curl bla youtube-dl`
+install youtube-dl 
+> [instructions](https://github.com/ytdl-org/youtube-dl/blob/master/README.md#readme)
 
 Run npm install to install all packages
-`npm install`
+>npm install
