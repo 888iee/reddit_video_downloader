@@ -32,7 +32,12 @@ app.post( "/", ( req, res, next ) => {
 	console.log( `requested video download url: ${url}` );
 
 	
-	download.initialize( url );
+	await download.initialize( url );
+	
 });
 
 app.listen( port, () => console.log( `Server running on port ${ port }` ));
+// https://stackoverflow.com/questions/56615083/executing-a-function-after-an-another-asynchronous-function-finishes-in-javasc
+// https://superuser.com/questions/277642/how-to-merge-audio-and-video-file-in-ffmpeg
+// https://github.com/damianociarla/node-ffmpeg
+// https://stackoverflow.com/questions/28790744/how-would-one-do-async-javascript-getters-and-setters

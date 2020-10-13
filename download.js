@@ -5,23 +5,36 @@ const infoparams = ( url ) => [ url, "-j"];
 
 const download = {
     url: null,
-    filename: null,
     getInfo: async ( rUrl, info ) => {
         execFile("youtube-dl", 
-            infoparams( rUrl ), 
-            ( err, stdout, stderr ) => {
-                if( err ) throw err;
-                
-                info ? download.filename = JSON.parse( stdout )._filename : null;
+                infoparams( rUrl ), 
+                ( err, stdout, stderr ) => {
+                    if( err ) throw err;
+                    
+                    info ? download.filename = JSON.parse( stdout )._filename : null;
 
-                console.log( JSON.parse( stdout ).title )
+                    download.startDownload( JSON.parse( stdout ).title );
+                
+
         });
     },
     initialize: async ( retrievedUrl ) => {
         download.url = retrievedUrl;
 
         await download.getInfo( retrievedUrl )
-        // console.log( info !== undefined ? info : "nothing to see here" );
+    
+    },
+    startDownload: ( name ) => {
+        console.log( "starting download" );
+        
+        execFile("youtube-dl", 
+            params( download.url ), 
+            ( err, stdout, stderr ) => {
+                if( err ) throw err;
+                
+    });
+
+
     }
 
 }
