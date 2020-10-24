@@ -4,23 +4,23 @@ const fs 		= require( "fs" );
 const params = ( url ) => [ url, "--restrict-filenames", "--no-call-home", "--no-continue", "--no-part", "--no-cache-dir", "-t"];
 const infoparams = ( url ) => [ url, "-j"];
 
-class Download {
+
+module.exports = class Download {
 	
-	/* TODO:
-	*	get URL
+	/* TODO: get URL
 	*/
 	constructor( url ) {
 		this.url 		= url;
 		this.metadata;
-		this.dirName;
+		this.title;
 	}
 
-	/* TODO:
-	*	retrieve metadata
-	*/
-	get metadata() {
 
-		return new Promise( () => {
+	/* TODO: retrieve metadata
+	*/
+	getMetadata() {
+
+		return new Promise( (resolve) => {
 			console.log( "retrieving metadata" );
 
 			execFile("executables/youtube-dl", 
@@ -28,36 +28,32 @@ class Download {
 				( err, stdout, stderr ) => {
 					if( err ) throw err;
 					
-					this.metadata = JSON.parse( stdout )._filename;
+					this.metadata = JSON.parse( stdout );
 
 					console.log( "metadata retrieved" );
+					resolve();
 			});
-
 		});
 	}
 	
-	/* TODO:
-	* 	create directory
+	/* TODO: create directory
 	*/
 	createDir() {
 		return new Promise( () => {
 
 			// set directory name and swap space with underscore
-			this.dirName = this.metadata.title.split( " " ).join( "_" );
+			this.title = this.metadata.title.split( " " ).join( "_" );
 			
 			// TODO: not checked yet if exist
-			fs.mkdir( this.dirName, err => {
-				console.log( err );
-			});
+			fs.mkdir( `./temp/${ this.title }`, err => err ? console.log( err ) : true );
 		});
 	}
 	
-	/* TODO:
-	*	download video
+	/* TODO: download video
 	*/
 	download() {
 		return new Promise( () => {
-			console.log( `starting download for ${ this.dirName }` );
+			console.log( `starting download for ${ this.title }` );
 
 			// TODO: isn't downloading to directory yet
 			execFile("executables/youtube-dl", 
@@ -69,26 +65,19 @@ class Download {
 		});
 	}
 	
-	/* TODO:
-	*	merge audio with video
+	/* TODO: merge audio with video
 	*/
 	
-	/* TODO:
-	*	return video file
+	/* TODO: return video file
 	*/
-	
-	/* TODO:
-	*	delete after 10 minutes
+	startProcessing() {
+		this.getMetadata()
+			.then( () => this.createDir() )
+			.then( () => this.download() );
+	}
+	/* TODO: delete after 10 minutes
 	*/
 	
 }
 
-/* TASKS: 
-*	- get URL
-*	- retrieve metadata
-* 	- create directory
-*	- download video
-*	- merge audio with video
-*	- return video file
-*	- delete after 10 minutes
-*/
+
