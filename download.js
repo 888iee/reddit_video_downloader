@@ -6,7 +6,7 @@ const infoparams = ( url ) => [ url, "-j"];
 const download = {
     url: null,
     getInfo: async ( rUrl, info ) => {
-        execFile("youtube-dl", 
+        execFile("executables/youtube-dl", 
                 infoparams( rUrl ), 
                 ( err, stdout, stderr ) => {
                     if( err ) throw err;
@@ -27,13 +27,14 @@ const download = {
     startDownload: ( name ) => {
         console.log( "starting download" );
         
-        execFile("youtube-dl", 
+        execFile("executables/youtube-dl", 
             params( download.url ), 
             ( err, stdout, stderr ) => {
                 if( err ) throw err;
                 
-    });
+        });
 
+        console.log( `downloading ${ name } finished.` );
 
     }
 
