@@ -1,7 +1,8 @@
 const fs 		= require( "fs" );
-const download 	= require( "./download" );
+const download 	= require( "./Download" );
 const express 	= require( "express" );
 const bodyParse = require( "body-parser" );
+const Download = require("./Download");
 
 // port
 const port = 3000;
@@ -10,7 +11,10 @@ const port = 3000;
 // DEBUGGING WITHOUT CLIENTSIDE HTML
 // reddit.initialize( url );
 let url = "https://reddit.com/r/WatchPeopleDieInside/comments/j8n5c1/putin_laughs_at_his_minister_for_suggesting_to/";
-download.initialize( url );
+
+const f = new Download( url );
+
+f.startProcessing();
 
 
 // const app = express();
