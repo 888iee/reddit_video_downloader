@@ -16,6 +16,10 @@ const f = new Download( url );
 
 f.startProcessing();
 
+const g = new Download( "https://www.reddit.com/r/Damnthatsinteresting/comments/jhpegj/how_companies_label_sugar_to_trick_you_into/" );
+g.startProcessing();
+
+
 
 // const app = express();
 

@@ -1,7 +1,7 @@
 const execFile 	= require( "child_process" ).execFile;
 const fs 		= require( "fs" );
 
-const params = ( url ) => [ url, "--restrict-filenames", "--no-call-home", "--no-continue", "--no-part", "--no-cache-dir", "-t"];
+const params = ( url ) => [ url, "--restrict-filenames", "--no-call-home", "--no-continue", "--no-part", "--no-cache-dir", "-o temp/%(title)s/%(title)s.%(ext)s", "--no-playlist", "--console-title"];
 const infoparams = ( url ) => [ url, "-j"];
 
 
@@ -20,7 +20,7 @@ module.exports = class Download {
 	*/
 	getMetadata() {
 
-		return new Promise( (resolve) => {
+		return new Promise(( resolve ) => {
 			console.log( "retrieving metadata" );
 
 			execFile("executables/youtube-dl", 
@@ -31,28 +31,19 @@ module.exports = class Download {
 					this.metadata = JSON.parse( stdout );
 
 					console.log( "metadata retrieved" );
+					
+					// set directory name and swap space with underscore
+					this.title = this.metadata.title.split( " " ).join( "_" );
 					resolve();
 			});
 		});
 	}
 	
-	/* TODO: create directory
-	*/
-	createDir() {
-		return new Promise( () => {
-
-			// set directory name and swap space with underscore
-			this.title = this.metadata.title.split( " " ).join( "_" );
-			
-			// TODO: not checked yet if exist
-			fs.mkdir( `./temp/${ this.title }`, err => err ? console.log( err ) : true );
-		});
-	}
 	
 	/* TODO: download video
 	*/
 	download() {
-		return new Promise( () => {
+		return new Promise(( resolve ) => {
 			console.log( `starting download for ${ this.title }` );
 
 			// TODO: isn't downloading to directory yet
@@ -60,6 +51,7 @@ module.exports = class Download {
             params( this.url ), 
             ( err, stdout, stderr ) => {
                 if( err ) throw err;
+				resolve();
                 
         	});
 		});
@@ -72,8 +64,7 @@ module.exports = class Download {
 	*/
 	startProcessing() {
 		this.getMetadata()
-			.then( () => this.createDir() )
-			.then( () => this.download() );
+			.then(() => this.download() );
 	}
 	/* TODO: delete after 10 minutes
 	*/
