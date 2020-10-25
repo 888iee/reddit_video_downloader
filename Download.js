@@ -23,7 +23,7 @@ module.exports = class Download {
 		return new Promise(( resolve ) => {
 			console.log( "retrieving metadata" );
 
-			execFile("executables/youtube-dl", 
+			execFile( "executables/youtube-dl", 
 				infoparams( this.url ), 
 				( err, stdout, stderr ) => {
 					if( err ) throw err;
@@ -47,7 +47,7 @@ module.exports = class Download {
 			console.log( `starting download for ${ this.title }` );
 
 			// TODO: isn't downloading to directory yet
-			execFile("executables/youtube-dl", 
+			execFile( "executables/youtube-dl", 
             params( this.url ), 
             ( err, stdout, stderr ) => {
                 if( err ) throw err;
@@ -59,7 +59,14 @@ module.exports = class Download {
 	
 	/* TODO: merge audio with video
 	*/
-	
+	mergeAudioWithVideo() {
+		return new Promise(( resolve ) => {
+			console.log( `merging ${ this.title }` );
+
+			execFile
+		});
+	}
+
 	/* TODO: return video file
 	*/
 	startProcessing() {
