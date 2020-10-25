@@ -1,5 +1,5 @@
 const execFile 	= require( "child_process" ).execFile;
-const fs 		= require( "fs" );
+// const ffmpeg	= require( "ffmpeg" );
 
 const params = ( url ) => [ url, "--restrict-filenames", "--no-call-home", "--no-continue", "--no-part", "--no-cache-dir", "-o temp/%(title)s/%(title)s.%(ext)s", "--no-playlist", "--console-title"];
 const infoparams = ( url ) => [ url, "-j"];
@@ -13,6 +13,7 @@ module.exports = class Download {
 		this.url 		= url;
 		this.metadata;
 		this.title;
+		this.path;
 	}
 
 
@@ -50,7 +51,8 @@ module.exports = class Download {
 			execFile( "executables/youtube-dl", 
             params( this.url ), 
             ( err, stdout, stderr ) => {
-                if( err ) throw err;
+				if( err ) throw err;
+				this.path = `temp/${ this.title }/${ this.title }.mp4`;
 				resolve();
                 
         	});
@@ -63,7 +65,6 @@ module.exports = class Download {
 		return new Promise(( resolve ) => {
 			console.log( `merging ${ this.title }` );
 
-			execFile
 		});
 	}
 
