@@ -42,7 +42,8 @@ app.post( "/", ( req, res, next ) => {
 		.startProcessing() 
 		.then(( p ) => {
 			console.log( p );
-			process.nextTick(() => res.sendFile( path.join( __dirname, p ) ));
+			// process.nextTick(() => 
+			res.download( path.join( __dirname, p ) );
 		})
 		.catch( err => console.log( err ) );
 	

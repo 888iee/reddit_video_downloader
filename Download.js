@@ -3,7 +3,7 @@ const { resolve } = require("path");
 const execFile 	= require( "child_process" ).execFile;
 // const ffmpeg	= require( "ffmpeg" );
 
-const params = ( url ) => [ url, "--restrict-filenames", "--no-call-home", "--no-continue", "--no-part", "--no-cache-dir", "-o temp/%(id)s/%(title)s.%(ext)s", "--no-playlist", "--console-title"];
+const params = ( url ) => [ url, "--restrict-filenames", "--no-call-home", "--no-continue", "--no-part", "--no-cache-dir", "-otemp/%(id)s/%(id)s.%(ext)s", "--no-playlist", "--console-title"];
 const infoparams = ( url ) => [ url, "-j"];
 
 
@@ -54,7 +54,7 @@ module.exports = class Download {
             params( this.url ), 
             ( err, stdout, stderr ) => {
 				if( err ) throw err;
-				this.path = `temp/${ this.metadata.id }/${ this.title }.mp4`;
+				this.path = `temp/${ this.metadata.id }/${ this.metadata.id }.mp4`;
 				resolve();
                 
         	});
