@@ -1,7 +1,9 @@
+const { resolve } = require("path");
+
 const execFile 	= require( "child_process" ).execFile;
 // const ffmpeg	= require( "ffmpeg" );
 
-const params = ( url ) => [ url, "--restrict-filenames", "--no-call-home", "--no-continue", "--no-part", "--no-cache-dir", "-o temp/%(title)s/%(title)s.%(ext)s", "--no-playlist", "--console-title"];
+const params = ( url ) => [ url, "--restrict-filenames", "--no-call-home", "--no-continue", "--no-part", "--no-cache-dir", "-o temp/%(id)s/%(title)s.%(ext)s", "--no-playlist", "--console-title"];
 const infoparams = ( url ) => [ url, "-j"];
 
 
@@ -52,7 +54,7 @@ module.exports = class Download {
             params( this.url ), 
             ( err, stdout, stderr ) => {
 				if( err ) throw err;
-				this.path = `temp/${ this.title }/${ this.title }.mp4`;
+				this.path = `temp/${ this.metadata.id }/${ this.title }.mp4`;
 				resolve();
                 
         	});
@@ -71,8 +73,12 @@ module.exports = class Download {
 	/* TODO: return video file
 	*/
 	startProcessing() {
-		this.getMetadata()
-			.then(() => this.download() );
+		return new Promise(( resolve ) => {
+			this.getMetadata()
+				.then(() => this.download() )
+				.then(() => resolve( this.path ))
+				.catch( err => console.log( err ) );
+		});
 	}
 	/* TODO: delete after 10 minutes
 	*/
